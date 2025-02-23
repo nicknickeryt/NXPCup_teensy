@@ -58,17 +58,8 @@
 			nxp,speed = "50-mhz";
 		};
 	};
-
-	pinmux_gpio6_pin3: pinmux_gpio6_pin3 {
-		group0 {
-			pinmux = <&iomuxc_gpio_ad_b0_03_gpio1_io03>;
-			drive-strength = "r0-7";
-			slew-rate = "fast";
-			nxp,speed = "50-mhz";
-		};
-	};
-
 };
+\
 &flexpwm1_pwm3 {
 	status = "okay";
 	pinctrl-0 = <&pinmux_flexpwm_ch1>;

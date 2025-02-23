@@ -13,17 +13,19 @@ set(ENV{ZEPHYR_BASE} ${ZEPHYR_BASE})
 set(CMAKE_GENERATOR "Ninja")
 
 include_directories(inc)
+include_directories(NXP_hal)
 
 target_sources(app PRIVATE 
                 src/main.cpp
-                src/blink.cpp
                 src/adc.cpp
-                src/usb.cpp
                 src/camera.cpp
-                src/led.cpp
                 src/gpio.cpp
                 src/servo.cpp
                 src/algorithm.cpp
                 src/pwm.cpp
+
+                NXP_hal/NXP_GPIO.cpp
+                NXP_hal/NXP_Blinky.cpp
+                NXP_hal/NXP_USB.cpp
                 )
 

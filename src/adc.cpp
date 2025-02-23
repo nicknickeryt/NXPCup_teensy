@@ -3,8 +3,6 @@
 #include <zephyr/device.h>
 #include <zephyr/drivers/adc.h>
 
-#include "led.h"
-
 void setupAdc() {
     if (!adc_is_ready_dt(&adc_channels[0])) {
         printk("ADC controller device %s not ready\n",

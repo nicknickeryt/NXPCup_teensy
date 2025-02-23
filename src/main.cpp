@@ -3,39 +3,43 @@
 
 #include "adc.h"
 #include "algorithm.h"
-#include "blink.h"
 #include "camera.h"
-#include "gpio.h"
-#include "led.h"
 #include "servo.h"
-#include "usb.h"
+
+#include "NXP_GPIO.hpp"
+#include "NXP_Blinky.hpp"
+#include "NXP_USB.hpp"
 
 #define ALGORITHM_STACKSIZE 8192
 #define CAMERA_STACKSIZE 8192
 #define CAMERA_LOG_STACKSIZE 8192
 
-#define BLINK_STACKSIZE 4096
-
 #define CAMERA_PROC_PRIORITY 100
 #define ALGORITHM_PRIORITY 7
 #define CAMERA_LOG_PRIORITY 3
-#define BLINK_AMBER_PRIORIY 1
+
+#define AMBER_LED_GPIO_PORT GPIO_PORT_2
+#define AMBER_LED_GPIO_PIN GPIO_PIN_3
+
+NXP_GPIO kittyAmberLed(AMBER_LED_GPIO_PORT, AMBER_LED_GPIO_PIN, GPIO_OUTPUT_ACTIVE);
+NXP_Blinky kittyBlinky(kittyAmberLed);
+NXP_USB kittyLogUSB;
 
 int main() {
-    setupGPIO();
-    setupAmberLed();
-    setupUSB();
-    setupAdc();
-    setupCamera();
-    setupServo();
+    // setupGPIO();
+    kittyBlinky.start();
+    kittyLogUSB.start();
+    // setupAdc();
+    // setupCamera();
+    // setupServo();
 
-    printk("NXP says hello <3\n");
+    printk("Kitty v2 says hello <3\n");
     uint32_t freq = CLOCK_GetCpuClkFreq();
     printk("CPU Freq: %d\n", freq);
 }
 
-K_THREAD_DEFINE(cameraProc_id, CAMERA_STACKSIZE, cameraProc, NULL, NULL,
-                NULL, CAMERA_PROC_PRIORITY, 0, 0);
+// K_THREAD_DEFINE(cameraProc_id, CAMERA_STACKSIZE, cameraProc, NULL, NULL,
+//                 NULL, CAMERA_PROC_PRIORITY, 0, 0);
 
 // K_THREAD_DEFINE(algorithmDemo_id, ALGORITHM_STACKSIZE, algorithmDemo, NULL,
 // NULL,
@@ -44,9 +48,3 @@ K_THREAD_DEFINE(cameraProc_id, CAMERA_STACKSIZE, cameraProc, NULL, NULL,
 // K_THREAD_DEFINE(cameraDebugPrintkLoop_id, CAMERA_LOG_STACKSIZE,
 // cameraDebugPrintkLoop, NULL, NULL,
 //                 NULL, CAMERA_LOG_PRIORITY, 0, 0);
-
-K_THREAD_DEFINE(blinkAmber_id, BLINK_STACKSIZE, blinkAmber, NULL, NULL, NULL,
-                BLINK_AMBER_PRIORIY, 0, 0);
-
-// K_THREAD_DEFINE(servoDemoProc_id, STACKSIZE, servoDemoProc, NULL, NULL, NULL,
-//                 BLINK_AMBER_PRIORIY, 0, 0);

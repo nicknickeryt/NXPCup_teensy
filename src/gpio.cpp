@@ -26,7 +26,7 @@ void gpioConfigurePin(const struct device *gpio_ct_dev, uint8_t pin,
 }
 
 void gpioSetPin(const struct device *gpio_ct_dev, uint8_t pin) {
-    int ret = gpio_pin_set_raw(gpio_ct_dev, pin, 1);
+    int ret = gpio_pin_set_raw(gpio_ct_dev, pin, 1);    
 
     if (ret != 0) {
         printk("err 0\n");

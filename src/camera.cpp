@@ -31,12 +31,12 @@ void cameraPutBufferMsgq() {
     k_msgq_put(&camera_dat_msgq, &cameraBufArr, K_NO_WAIT);
 }
 
-void cameraDelayUs(int32_t us) {
+void cameraDelayUs(uint32_t us) {
     uint32_t start = k_cycle_get_32();
     while (k_cyc_to_us_floor32(k_cycle_get_32() - start) < us);
 }
 
-void cameraDelayUsStart(int32_t us) {
+void cameraDelayUsStart(uint32_t us) {
     while (k_cyc_to_us_floor32(k_cycle_get_32() - cameraDelayStartUs) < us);
 }
 

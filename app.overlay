@@ -1,0 +1,103 @@
+/ {
+	chosen {
+		zephyr,console = &cdc_acm_uart0;
+	};
+	
+	zephyr,user {
+		io-channels = <&adc1 0>;
+	};
+
+    servo: servo {
+		compatible = "pwm-servo";
+		pwms = <&flexpwm1_pwm3 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+		min-pulse = <PWM_USEC(700)>;
+		max-pulse = <PWM_USEC(2300)>;
+	};
+
+	sipwm: sipwm {
+		compatible = "pwm-ledc";
+		pwms = <&flexpwm2_pwm2 1 PWM_MSEC(5) PWM_POLARITY_NORMAL>;
+		min-pulse = <PWM_USEC(1)>;
+		max-pulse = <PWM_USEC(16)>;
+	};
+
+};
+
+&zephyr_udc0 {
+	cdc_acm_uart0: cdc_acm_uart0 {
+		compatible = "zephyr,cdc-acm-uart";
+	};
+};
+
+&pinctrl {
+	// Servo PWM
+	pinmux_flexpwm_ch1: pinmux_flexpwm_ch1 {
+		group0 {
+			pinmux = <&iomuxc_gpio_b1_01_flexpwm1_pwmb3>;
+			drive-strength = "r0-7";
+			slew-rate = "fast";
+			nxp,speed = "50-mhz";
+		};
+	};
+
+	// SI PWM
+	pinmux_flexpwm_ch2: pinmux_flexpwm_ch2 {
+		group0 {
+			pinmux = <&iomuxc_gpio_b0_11_flexpwm2_pwmb2>;
+			drive-strength = "r0-7";
+			slew-rate = "fast";
+			nxp,speed = "50-mhz";
+		};
+	};
+
+	pinmux_adc_ch1: pinmux_adc_ch1 {
+		group0 {
+			pinmux = <&iomuxc_gpio_ad_b1_11_adc1_in0>;
+			drive-strength = "r0-7";
+			slew-rate = "fast";
+			nxp,speed = "50-mhz";
+		};
+	};
+
+	pinmux_gpio6_pin3: pinmux_gpio6_pin3 {
+		group0 {
+			pinmux = <&iomuxc_gpio_ad_b0_03_gpio1_io03>;
+			drive-strength = "r0-7";
+			slew-rate = "fast";
+			nxp,speed = "50-mhz";
+		};
+	};
+
+};
+&flexpwm1_pwm3 {
+	status = "okay";
+	pinctrl-0 = <&pinmux_flexpwm_ch1>;
+	pinctrl-names = "default";
+	nxp,prescaler = <64>;
+};
+
+&flexpwm2_pwm2 {
+	status = "okay";
+	pinctrl-0 = <&pinmux_flexpwm_ch2>;
+	pinctrl-names = "default";
+	nxp,prescaler = <64>;
+};
+
+&adc1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	pinctrl-0 = <&pinmux_adc_ch1>;
+	pinctrl-names = "default";
+
+	channel@0 {
+		reg = <0>;
+		zephyr,gain = "ADC_GAIN_1";
+		zephyr,reference = "ADC_REF_INTERNAL"; // tego nie mozna zmienic
+		zephyr,vref-mv = <3300>;
+		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>; // tego tez nie mozna zmienic
+		zephyr,resolution = <10>;
+		// zephyr,oversampling = <4>;
+	};
+};

@@ -3,8 +3,6 @@
 
 #include <zephyr/usb/usb_device.h>
 
-#include "usb.h"
-
 class NXP_USB {
    public:
     NXP_USB() = default;

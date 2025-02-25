@@ -7,7 +7,6 @@
 #include <zephyr/drivers/pwm.h>
 #include <zephyr/kernel.h>
 
-#include "adc.h"
 #include "camera.h"
 #include "servo.h"
 

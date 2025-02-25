@@ -3,7 +3,7 @@
 
 void pwmInit(const struct pwm_dt_spec *spec) {
     int err = device_is_ready(spec->dev);
-    if (err) {
+    if (err < 0) {
         printk("Error in pwmInit#device_is_ready(), err: %d\n", err);
         return;
     }
@@ -11,7 +11,7 @@ void pwmInit(const struct pwm_dt_spec *spec) {
 
 void pwmSetPulseNs(const struct pwm_dt_spec *spec, uint32_t pulseWidth) {
     int err = pwm_set_pulse_dt(spec, pulseWidth);
-    if (err) {
+    if (err < 0) {
         printk("Error in pwmSetPulseNs#pwm_set_pulse_dt(), err: %d\n", err);
         return;
     }

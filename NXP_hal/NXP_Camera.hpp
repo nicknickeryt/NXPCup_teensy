@@ -25,7 +25,6 @@ static uint32_t cameraBufArr[CAMERA_ADC_SAMPLES];
 #define CAMERA_MSG_LEN sizeof(cameraBufArr)
 #define CAMERA_MSG_ARRAY_SIZE 4
 
-// TODO rename these
 #define CAMERA_DELAY_US 36
 #define CAMERA_DELAY_US_HALF CAMERA_DELAY_US / 2
 

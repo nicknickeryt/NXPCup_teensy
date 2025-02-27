@@ -7,8 +7,11 @@
 #include <zephyr/drivers/pwm.h>
 
 // TODO improve this thing
-#define PWM_CHANNEL_SIPWM (&sipwm)
-static const struct pwm_dt_spec sipwm = PWM_DT_SPEC_GET(DT_NODELABEL(sipwm));
+#define PWM_CHANNEL_SIPWM (&pwmSi)
+#define PWM_CHANNEL_SERVO (&pwmServo)
+
+static const struct pwm_dt_spec pwmSi = PWM_DT_SPEC_GET(DT_NODELABEL(sipwm));
+static const struct pwm_dt_spec pwmServo = PWM_DT_SPEC_GET(DT_NODELABEL(servo));
 
 // TODO stop/start methods
 class NXP_PWM {

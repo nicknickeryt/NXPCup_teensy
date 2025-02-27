@@ -4,8 +4,6 @@
 
 #include "pwm.h"
 
-K_MSGQ_DEFINE(camera_dat_msgq, CAMERA_MSG_LEN, CAMERA_MSG_ARRAY_SIZE, 4);
-
 bool NXP_Camera::cameraInterruptState = 0;
 
 NXP_Camera::NXP_Camera(NXP_ADC& adc, NXP_GPIO& clkPin, NXP_GPIO& siPin)
@@ -29,7 +27,7 @@ void NXP_Camera::setup() {
     pwmSetPulseNs(PWM_SIPWM, 16000);
 }
 
-void NXP_Camera::startProc() {
+void NXP_Camera::start() {
     while (1) {  // FIXME: This should not be a blocking loop
         while (cameraInterruptState) {
             cameraDelayStartUs = k_cycle_get_32();
@@ -49,9 +47,6 @@ void NXP_Camera::startProc() {
             cameraDelayUsStart(128 * CAMERA_DELAY_US + CAMERA_DELAY_US_HALF);
             cameraClkPin.reset();
 
-            // TODO: not this way!
-            cameraPutBufferMsgq();
-
             cameraInterruptState = 0;
 
             // TODO:
@@ -69,14 +64,12 @@ void NXP_Camera::startProc() {
     }
 }
 
+uint32_t* NXP_Camera::getCameraBufArr() { return cameraBufArr; }
+
 void NXP_Camera::cameraInterruptHandler(const struct device* dev,
                                         struct gpio_callback* cb,
                                         uint32_t pins) {
     cameraInterruptState = 1;
-}
-
-void NXP_Camera::cameraPutBufferMsgq() {
-    k_msgq_put(&camera_dat_msgq, &cameraBufArr, K_NO_WAIT);
 }
 
 void NXP_Camera::cameraDelayUs(uint32_t us) {

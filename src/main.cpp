@@ -39,7 +39,7 @@ int main() {
 
     kittyCamera.setup();
 
-    kittyCamera.startProc();
+    kittyCamera.start();
 
     // setupAdc();
     // setupCamera();

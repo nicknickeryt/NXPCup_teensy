@@ -8,6 +8,7 @@
 
 #include "NXP_ADC.hpp"
 #include "NXP_GPIO.hpp"
+#include "NXP_PWM.hpp"
 
 #define CAMERA_CLK_GPIO_PORT GPIO_PORT_6
 #define CAMERA_CLK_GPIO_PIN GPIO_PIN_3
@@ -26,7 +27,7 @@
 
 class NXP_Camera {
    public:
-    NXP_Camera(NXP_ADC& adc, NXP_GPIO& clkPin, NXP_GPIO& siPin);
+    NXP_Camera(NXP_ADC& adc, NXP_GPIO& clkPin, NXP_GPIO& siPin, NXP_PWM& siPwm);
 
     void setup();
     void start();  // FIXME: We don't want a blocking while loop here
@@ -38,6 +39,7 @@ class NXP_Camera {
     NXP_ADC cameraAdc;
     NXP_GPIO cameraClkPin;
     NXP_GPIO cameraSiPin;
+    NXP_PWM cameraSiPwm;
 
     uint32_t cameraBufArr[CAMERA_ADC_SAMPLES];
 

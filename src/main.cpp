@@ -1,13 +1,13 @@
 #include <zephyr/kernel.h>
 #include <zephyr/sys/printk.h>
 
-#include "servo.h"
-
-#include "NXP_GPIO.hpp"
-#include "NXP_Blinky.hpp"
-#include "NXP_USB.hpp"
 #include "NXP_ADC.hpp"
+#include "NXP_Blinky.hpp"
 #include "NXP_Camera.hpp"
+#include "NXP_GPIO.hpp"
+#include "NXP_PWM.hpp"
+#include "NXP_USB.hpp"
+#include "servo.h"
 
 #define ALGORITHM_STACKSIZE 8192
 #define CAMERA_STACKSIZE 8192
@@ -20,7 +20,8 @@
 #define AMBER_LED_GPIO_PORT GPIO_PORT_2
 #define AMBER_LED_GPIO_PIN GPIO_PIN_3
 
-NXP_GPIO kittyAmberLed(AMBER_LED_GPIO_PORT, AMBER_LED_GPIO_PIN, GPIO_OUTPUT_ACTIVE);
+NXP_GPIO kittyAmberLed(AMBER_LED_GPIO_PORT, AMBER_LED_GPIO_PIN,
+                       GPIO_OUTPUT_ACTIVE);
 NXP_Blinky kittyBlinky(kittyAmberLed);
 NXP_USB kittyLogUSB;
 
@@ -28,8 +29,11 @@ NXP_ADC kittyCameraAdc(ADC_CHANNEL_0);
 NXP_GPIO kittyCameraClkPin(CAMERA_CLK_GPIO_PORT, CAMERA_CLK_GPIO_PIN);
 NXP_GPIO kittyCameraSiPin(CAMERA_SI_GPIO_PORT, CAMERA_SI_GPIO_PIN);
 
+NXP_PWM kittyCameraSiPwm(PWM_CHANNEL_SIPWM);
+
 // TODO proper camera port please :3
-NXP_Camera kittyCamera(kittyCameraAdc, kittyCameraClkPin, kittyCameraSiPin);
+NXP_Camera kittyCamera(kittyCameraAdc, kittyCameraClkPin, kittyCameraSiPin,
+                       kittyCameraSiPwm);
 
 int main() {
     // setupGPIO();
@@ -37,6 +41,7 @@ int main() {
     kittyLogUSB.start();
     kittyCameraAdc.setup();
 
+    kittyCameraSiPwm.setup();
     kittyCamera.setup();
 
     kittyCamera.start();

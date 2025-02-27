@@ -2,12 +2,14 @@
 
 #include <zephyr/sys/printk.h>
 
-#include "pwm.h"
-
 bool NXP_Camera::cameraInterruptState = 0;
 
-NXP_Camera::NXP_Camera(NXP_ADC& adc, NXP_GPIO& clkPin, NXP_GPIO& siPin)
-    : cameraAdc(adc), cameraClkPin(clkPin), cameraSiPin(siPin) {}
+NXP_Camera::NXP_Camera(NXP_ADC& adc, NXP_GPIO& clkPin, NXP_GPIO& siPin,
+                       NXP_PWM& siPwm)
+    : cameraAdc(adc),
+      cameraClkPin(clkPin),
+      cameraSiPin(siPin),
+      cameraSiPwm(siPwm) {}
 
 void NXP_Camera::setup() {
     cameraClkPin.configure(GPIO_OUTPUT_ACTIVE);
@@ -23,8 +25,8 @@ void NXP_Camera::setup() {
     cameraInterruptState = 0;
 
     // TODO convert to c++ thingy
-    pwmInit(PWM_SIPWM);
-    pwmSetPulseNs(PWM_SIPWM, 16000);
+    cameraSiPwm.setup();
+    cameraSiPwm.setPulseWidthUs(16);
 }
 
 void NXP_Camera::start() {

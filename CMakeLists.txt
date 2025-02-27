@@ -17,7 +17,6 @@ include_directories(NXP_hal)
 
 target_sources(app PRIVATE 
                 src/main.cpp
-                # src/servo.cpp
                 # src/algorithm.cpp // disable temporarily
 
                 NXP_hal/NXP_GPIO.cpp
@@ -26,5 +25,5 @@ target_sources(app PRIVATE
                 NXP_hal/NXP_ADC.cpp
                 NXP_hal/NXP_Camera.cpp
                 NXP_hal/NXP_PWM.cpp
+                NXP_hal/NXP_Servo.cpp
                 )
-

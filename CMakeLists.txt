@@ -17,7 +17,6 @@ include_directories(NXP_hal)
 
 target_sources(app PRIVATE 
                 src/main.cpp
-                src/gpio.cpp
                 src/servo.cpp
                 # src/algorithm.cpp // disable temporarily
                 src/pwm.cpp

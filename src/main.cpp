@@ -8,6 +8,7 @@
 #include "NXP_PWM.hpp"
 #include "NXP_USB.hpp"
 #include "NXP_Servo.hpp"
+#include "NXP_Algorithm.hpp"
 
 #define ALGORITHM_STACKSIZE 8192
 #define CAMERA_STACKSIZE 8192
@@ -38,6 +39,8 @@ NXP_Camera kittyCamera(kittyCameraAdc, kittyCameraClkPin, kittyCameraSiPin,
 NXP_PWM kittyServoPwm(PWM_CHANNEL_SERVO);
 NXP_Servo kittyServo(kittyServoPwm);
 
+NXP_Algorithm kittyAlgorithm(kittyCamera);
+
 int main() {
     kittyBlinky.start();
     kittyLogUSB.start();
@@ -50,7 +53,6 @@ int main() {
 
     kittyServoPwm.setup();
     kittyServo.setup();
-
 
     printk("Kitty v2 says hello <3\n");
     uint32_t freq = CLOCK_GetCpuClkFreq();

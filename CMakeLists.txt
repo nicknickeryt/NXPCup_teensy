@@ -16,9 +16,6 @@ include_directories(inc)
 include_directories(NXP_hal)
 
 target_sources(app PRIVATE 
-                src/main.cpp
-                # src/algorithm.cpp // disable temporarily
-
                 NXP_hal/NXP_GPIO.cpp
                 NXP_hal/NXP_Blinky.cpp
                 NXP_hal/NXP_USB.cpp
@@ -26,4 +23,7 @@ target_sources(app PRIVATE
                 NXP_hal/NXP_Camera.cpp
                 NXP_hal/NXP_PWM.cpp
                 NXP_hal/NXP_Servo.cpp
-                )
+                NXP_hal/NXP_Algorithm.cpp
+
+                src/main.cpp
+            )

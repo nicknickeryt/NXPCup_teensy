@@ -12,7 +12,6 @@ set(ENV{ZEPHYR_BASE} ${ZEPHYR_BASE})
 
 set(CMAKE_GENERATOR "Ninja")
 
-include_directories(inc)
 include_directories(NXP_hal)
 
 target_sources(app PRIVATE 

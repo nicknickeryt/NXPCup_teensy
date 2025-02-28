@@ -8,7 +8,7 @@ In order not to store the whole Zephyr codebase in this repo, we use `west.yml` 
 
 First, let's init west project:
 ```
-west init -m https://github.com/nicknickeryt/NXPCup_teensy --mr your-desired-branch NXPCup_teensy
+west init -m https://github.com/nicknickeryt/NXPCup_teensy --mr wip/cpp-hal-rewrite NXPCup_teensy
 ```
 
 Then automatically download Zephyr source code and necessary libs:

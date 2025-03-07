@@ -16,7 +16,7 @@
 
 	sipwm: sipwm {
 		compatible = "pwm-ledc";
-		pwms = <&flexpwm2_pwm2 1 PWM_MSEC(5) PWM_POLARITY_NORMAL>;
+		pwms = <&flexpwm4_pwm0 0 PWM_MSEC(5) PWM_POLARITY_NORMAL>;
 		min-pulse = <PWM_USEC(1)>;
 		max-pulse = <PWM_USEC(16)>;
 	};
@@ -41,9 +41,9 @@
 	};
 
 	// SI PWM
-	pinmux_flexpwm_ch2: pinmux_flexpwm_ch2 {
+	pinmux_flexpwm_ch0: pinmux_flexpwm_ch0 {
 		group0 {
-			pinmux = <&iomuxc_gpio_b0_11_flexpwm2_pwmb2>;
+			pinmux = <&iomuxc_gpio_ad_b1_08_flexpwm4_pwma0>;
 			drive-strength = "r0-7";
 			slew-rate = "fast";
 			nxp,speed = "50-mhz";
@@ -58,6 +58,21 @@
 			nxp,speed = "50-mhz";
 		};
 	};
+
+	// pinmux_lpuart1: pinmux_lpuart1 {
+	// 	group0 {
+	// 		pinmux = <&iomuxc_gpio_ad_b0_12_lpuart1_tx>;
+	// 		drive-strength = <0x0>;
+	// 		slew-rate = "fast";
+	// 		nxp,speed = "50-mhz";
+	// 	};
+	// 	group1 {
+	// 		pinmux = <&iomuxc_gpio_ad_b0_13_lpuart1_rx>;
+	// 		drive-strength = <0x0>;
+	// 		slew-rate = "fast";
+	// 		nxp,speed = "50-mhz";
+	// 	};
+	// };
 };
 \
 &flexpwm1_pwm3 {
@@ -67,9 +82,9 @@
 	nxp,prescaler = <64>;
 };
 
-&flexpwm2_pwm2 {
+&flexpwm4_pwm0 {
 	status = "okay";
-	pinctrl-0 = <&pinmux_flexpwm_ch2>;
+	pinctrl-0 = <&pinmux_flexpwm_ch0>;
 	pinctrl-names = "default";
 	nxp,prescaler = <64>;
 };

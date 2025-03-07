@@ -29,6 +29,8 @@
 #define GPIO_PIN_13 13
 #define GPIO_PIN_14 14
 #define GPIO_PIN_15 15
+#define GPIO_PIN_25 25
+#define GPIO_PIN_26 26
 
 class NXP_GPIO {
    public:

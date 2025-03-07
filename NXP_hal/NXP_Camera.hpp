@@ -10,12 +10,12 @@
 #include "NXP_GPIO.hpp"
 #include "NXP_PWM.hpp"
 
-#define CAMERA_CLK_GPIO_PORT GPIO_PORT_6
-#define CAMERA_CLK_GPIO_PIN GPIO_PIN_3
+#define CAMERA_CLK_GPIO_PORT GPIO_PORT_1
+#define CAMERA_CLK_GPIO_PIN GPIO_PIN_25
 
 // TODO get rid of this lame gpio interrupts
-#define CAMERA_SI_GPIO_PORT GPIO_PORT_2
-#define CAMERA_SI_GPIO_PIN GPIO_PIN_0
+#define CAMERA_SI_GPIO_PORT GPIO_PORT_1
+#define CAMERA_SI_GPIO_PIN GPIO_PIN_26
 
 #define CAMERA_ADC_SAMPLES 128
 
@@ -24,6 +24,8 @@
 
 #define CAMERA_DELAY_US 36
 #define CAMERA_DELAY_US_HALF CAMERA_DELAY_US / 2
+
+#define CAMERA_LOG_ENABLED 1
 
 class NXP_Camera {
    public:
@@ -36,7 +38,7 @@ class NXP_Camera {
     uint32_t* getCameraBufArr();
 
    private:
-    NXP_ADC cameraAdc;
+    NXP_ADC& cameraAdc;
     NXP_GPIO cameraClkPin;
     NXP_GPIO cameraSiPin;
     NXP_PWM cameraSiPwm;

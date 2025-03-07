@@ -1,5 +1,6 @@
 #include "NXP_Camera.hpp"
 
+#include <stdio.h>
 #include <zephyr/sys/printk.h>
 
 bool NXP_Camera::cameraInterruptState = 0;
@@ -48,6 +49,12 @@ void NXP_Camera::start() {
             cameraClkPin.set();
             cameraDelayUsStart(128 * CAMERA_DELAY_US + CAMERA_DELAY_US_HALF);
             cameraClkPin.reset();
+
+#ifdef CAMERA_LOG_ENABLED
+            printk("\nCAML");
+            for (unsigned int i = 0; i < CAMERA_ADC_SAMPLES; i++)
+                printk(".%hhu", (uint8_t)(cameraBufArr[i] >> 2));
+#endif
 
             cameraInterruptState = 0;
 

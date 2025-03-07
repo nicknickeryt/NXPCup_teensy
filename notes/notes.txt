@@ -1,0 +1,13 @@
+Current pinout (I hope)
+
+21 -> CAMERA_AO   | ADC1
+23 -> CAMERA_CLK  | GPIO1_25
+22 -> CAMERA_SI   | PWM!
+20 -> CAMERA_SI_IN| INTERRUPT
+
+7  -> SERVO_PWM
+
+13 -> AMBER_LED
+
+24 -> UART1_TX 
+25 -> UART1_RX

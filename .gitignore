@@ -12,5 +12,4 @@ _deps
 CMakeUserPresets.json
 build/
 .vscode/
-notes.txt
 .west/

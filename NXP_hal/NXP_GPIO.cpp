@@ -28,6 +28,8 @@ int NXP_GPIO::configure(gpio_flags_t flags) {
 
 int NXP_GPIO::set() { return gpio_pin_set_raw(port, pin, 1); }
 
+int NXP_GPIO::get() { return gpio_pin_get(port, pin); }
+
 int NXP_GPIO::reset() { return gpio_pin_set_raw(port, pin, 0); }
 
 int NXP_GPIO::toggle() { return gpio_pin_toggle(port, pin); }

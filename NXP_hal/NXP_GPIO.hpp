@@ -29,11 +29,21 @@
 #define GPIO_PIN_13 13
 #define GPIO_PIN_14 14
 #define GPIO_PIN_15 15
+#define GPIO_PIN_16 16
+#define GPIO_PIN_17 17
+#define GPIO_PIN_18 18
+#define GPIO_PIN_19 19
+#define GPIO_PIN_20 20
+#define GPIO_PIN_21 21
+#define GPIO_PIN_22 22
+#define GPIO_PIN_23 23
+#define GPIO_PIN_24 24
 #define GPIO_PIN_25 25
 #define GPIO_PIN_26 26
 
 class NXP_GPIO {
    public:
+    NXP_GPIO() = default;
     NXP_GPIO(const struct device* port, uint8_t pin);
     NXP_GPIO(const struct device* port, uint8_t pin, gpio_flags_t flags);
     NXP_GPIO(const struct device* port, uint8_t pin, gpio_flags_t flags,
@@ -41,6 +51,7 @@ class NXP_GPIO {
 
     int configure(gpio_flags_t flags);
     int set();
+    int get();
     int reset();
     int toggle();
     int configureInterrupt(gpio_flags_t flags,

@@ -1,16 +1,22 @@
 #include "NXP_Camera.hpp"
 
 #include <stdio.h>
+#include <zephyr/kernel.h>
 #include <zephyr/sys/printk.h>
+
+#include "NXP_UART.hpp"
 
 bool NXP_Camera::cameraInterruptState = 0;
 
+K_MSGQ_DEFINE(camera_msgq, CAMERA_MSG_LEN, CAMERA_MSG_ARRAY_SIZE, 4);
+
 NXP_Camera::NXP_Camera(NXP_ADC& adc, NXP_GPIO& clkPin, NXP_GPIO& siPin,
-                       NXP_PWM& siPwm)
+                       NXP_PWM& siPwm, NXP_UART& uart)
     : cameraAdc(adc),
       cameraClkPin(clkPin),
       cameraSiPin(siPin),
-      cameraSiPwm(siPwm) {}
+      cameraSiPwm(siPwm),
+      cameraLogUart(uart) {}
 
 void NXP_Camera::setup() {
     cameraClkPin.configure(GPIO_OUTPUT_ACTIVE);
@@ -30,7 +36,7 @@ void NXP_Camera::setup() {
     cameraSiPwm.setPulseWidthUs(16);
 }
 
-void NXP_Camera::start() {
+void NXP_Camera::proc() {
     while (1) {  // FIXME: This should not be a blocking loop
         while (cameraInterruptState) {
             cameraDelayStartUs = k_cycle_get_32();
@@ -51,12 +57,11 @@ void NXP_Camera::start() {
             cameraClkPin.reset();
 
 #ifdef CAMERA_LOG_ENABLED
-            printk("\nCAML");
+            cameraLogUart.write("\nCAML");
             for (unsigned int i = 0; i < CAMERA_ADC_SAMPLES; i++)
-                printk(".%hhu", (uint8_t)(cameraBufArr[i] >> 2));
+                cameraLogUart.write(".%hhu", (uint8_t)(cameraBufArr[i] >> 2));
+            cameraLogUart.write("\r\n");
 #endif
-
-            cameraInterruptState = 0;
 
             // TODO:
             // int steeringError = algorithmCalculatePosition(cameraBufArr);
@@ -66,10 +71,13 @@ void NXP_Camera::start() {
 
             // TODO:
             // servoSetDegrees(steeringError);
+            k_msgq_put(&camera_msgq, &cameraBufArr, K_NO_WAIT);
+
+            cameraInterruptState = 0;
         }
 
         // TODO check it!
-        // k_yield();
+        k_yield();
     }
 }
 
@@ -83,9 +91,15 @@ void NXP_Camera::cameraInterruptHandler(const struct device* dev,
 
 void NXP_Camera::cameraDelayUs(uint32_t us) {
     uint32_t start = k_cycle_get_32();
-    while (k_cyc_to_us_floor32(k_cycle_get_32() - start) < us);
+    while (k_cyc_to_us_floor32(k_cycle_get_32() - start) < us) k_yield();
 }
 
 void NXP_Camera::cameraDelayUsStart(uint32_t us) {
-    while (k_cyc_to_us_floor32(k_cycle_get_32() - cameraDelayStartUs) < us);
+    while (k_cyc_to_us_floor32(k_cycle_get_32() - cameraDelayStartUs) < us)
+        k_yield();
+}
+
+void NXP_Camera::cameraThreadWrapper(void* arg1, void* arg2, void* arg3) {
+    // Rzutowanie wskaźnika na obiekt i wywołanie jego metody
+    static_cast<NXP_Camera*>(arg1)->proc();
 }

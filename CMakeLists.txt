@@ -23,6 +23,8 @@ target_sources(app PRIVATE
                 NXP_hal/NXP_PWM.cpp
                 NXP_hal/NXP_Servo.cpp
                 NXP_hal/NXP_Algorithm.cpp
+                NXP_hal/NXP_UART.cpp
+                NXP_hal/NXP_Encoder.cpp
 
                 src/main.cpp
             )

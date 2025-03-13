@@ -1,26 +1,40 @@
 / {
 	chosen {
 		zephyr,console = &cdc_acm_uart0;
+		zephyr,bt-uart = &lpuart6;
 	};
 	
 	zephyr,user {
 		io-channels = <&adc1 0>;
 	};
 
-    servo: servo {
+	pwm_camera_si: pwm_camera_si {
+		compatible = "pwm-servo";
+		pwms = <&flexpwm4_pwm0 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+		min-pulse = <PWM_USEC(700)>;
+		max-pulse = <PWM_USEC(2300)>;
+	};
+
+	pwm_esc0: pwm_esc0 {
 		compatible = "pwm-servo";
 		pwms = <&flexpwm1_pwm3 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
 		min-pulse = <PWM_USEC(700)>;
 		max-pulse = <PWM_USEC(2300)>;
 	};
 
-	sipwm: sipwm {
-		compatible = "pwm-ledc";
-		pwms = <&flexpwm4_pwm0 0 PWM_MSEC(5) PWM_POLARITY_NORMAL>;
-		min-pulse = <PWM_USEC(1)>;
-		max-pulse = <PWM_USEC(16)>;
+	pwm_esc1: pwm_esc1 {
+		compatible = "pwm-servo";
+		pwms = <&flexpwm1_pwm3 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+		min-pulse = <PWM_USEC(700)>;
+		max-pulse = <PWM_USEC(2300)>;
 	};
 
+	pwm_servo: pwm_servo {
+		compatible = "pwm-servo";
+		pwms = <&flexpwm2_pwm2 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+		min-pulse = <PWM_USEC(700)>;
+		max-pulse = <PWM_USEC(2300)>;
+	};
 };
 
 &zephyr_udc0 {
@@ -30,20 +44,37 @@
 };
 
 &pinctrl {
-	// Servo PWM
-	pinmux_flexpwm_ch1: pinmux_flexpwm_ch1 {
+	// PWM_ESC0
+	pinmux_flexpwm_camera_si: pinmux_flexpwm_camera_si {
 		group0 {
-			pinmux = <&iomuxc_gpio_b1_01_flexpwm1_pwmb3>;
+			pinmux = <&iomuxc_gpio_ad_b1_08_flexpwm4_pwma0>;
 			drive-strength = "r0-7";
 			slew-rate = "fast";
 			nxp,speed = "50-mhz";
 		};
 	};
 
-	// SI PWM
-	pinmux_flexpwm_ch0: pinmux_flexpwm_ch0 {
+	pinmux_flexpwm_esc0: pinmux_flexpwm_esc0 {
 		group0 {
-			pinmux = <&iomuxc_gpio_ad_b1_08_flexpwm4_pwma0>;
+			pinmux = <&iomuxc_gpio_b1_01_flexpwm1_pwmb3>, <&iomuxc_gpio_b1_00_flexpwm1_pwma3>;
+			drive-strength = "r0-7";
+			slew-rate = "fast";
+			nxp,speed = "50-mhz";
+		};
+	};
+
+	// pinmux_flexpwm_esc1: pinmux_flexpwm_esc1 {
+	// 	group0 {
+	// 		pinmux = <&iomuxc_gpio_b1_00_flexpwm1_pwma3>;
+	// 		drive-strength = "r0-7";
+	// 		slew-rate = "fast";
+	// 		nxp,speed = "50-mhz";
+	// 	};
+	// };
+
+	pinmux_flexpwm_servo: pinmux_flexpwm_servo {
+		group0 {
+			pinmux = <&iomuxc_gpio_b0_11_flexpwm2_pwmb2>;
 			drive-strength = "r0-7";
 			slew-rate = "fast";
 			nxp,speed = "50-mhz";
@@ -59,32 +90,34 @@
 		};
 	};
 
-	// pinmux_lpuart1: pinmux_lpuart1 {
-	// 	group0 {
-	// 		pinmux = <&iomuxc_gpio_ad_b0_12_lpuart1_tx>;
-	// 		drive-strength = <0x0>;
-	// 		slew-rate = "fast";
-	// 		nxp,speed = "50-mhz";
-	// 	};
-	// 	group1 {
-	// 		pinmux = <&iomuxc_gpio_ad_b0_13_lpuart1_rx>;
-	// 		drive-strength = <0x0>;
-	// 		slew-rate = "fast";
-	// 		nxp,speed = "50-mhz";
-	// 	};
-	// };
+	pinmux_lpuart6: pinmux_lpuart6 {
+		group0 {
+			pinmux = <&iomuxc_gpio_ad_b0_03_lpuart6_rx>,
+				<&iomuxc_gpio_ad_b0_02_lpuart6_tx>;
+			drive-strength = "r0-6";
+			slew-rate = "slow";
+			nxp,speed = "100-mhz";
+		};
+	};
 };
-\
+
 &flexpwm1_pwm3 {
 	status = "okay";
-	pinctrl-0 = <&pinmux_flexpwm_ch1>;
+	pinctrl-0 = <&pinmux_flexpwm_esc0>;
+	pinctrl-names = "default";
+	nxp,prescaler = <64>;
+};
+
+&flexpwm2_pwm2 {
+	status = "okay";
+	pinctrl-0 = <&pinmux_flexpwm_servo>;
 	pinctrl-names = "default";
 	nxp,prescaler = <64>;
 };
 
 &flexpwm4_pwm0 {
 	status = "okay";
-	pinctrl-0 = <&pinmux_flexpwm_ch0>;
+	pinctrl-0 = <&pinmux_flexpwm_camera_si>;
 	pinctrl-names = "default";
 	nxp,prescaler = <64>;
 };
@@ -106,4 +139,11 @@
 		zephyr,resolution = <10>;
 		// zephyr,oversampling = <4>;
 	};
+};
+
+&lpuart6 {
+	status = "okay";
+	compatible = "nxp,lpuart";
+	current-speed = < 115200 >;
+	pinctrl-0 = <&pinmux_lpuart6>;
 };

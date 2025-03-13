@@ -77,10 +77,10 @@ void NXP_Encoder::encoderInterruptHandler(const device* port, gpio_callback* cb,
     uint64_t elapsed = now - lastUpdateTime;
 
     if (elapsed > 1000) {
-        // 40 impulsów na pełny obrót
-        uint32_t rpm = (pulseCount * 60) / 40;  // obroty na minutę (RPM)
-        pulseCount = 0;  // Zresetuj licznik impulsów
-        lastUpdateTime = now;  // Zaktualizuj czas
+        // 20 pulses per revolution (actually 40 interrupts)
+        uint32_t rpm = (pulseCount * 60) / 40;  
+        pulseCount = 0;  
+        lastUpdateTime = now;  
 
         encoderRPM = rpm;
     }

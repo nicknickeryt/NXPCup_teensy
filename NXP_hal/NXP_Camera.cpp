@@ -31,13 +31,12 @@ void NXP_Camera::setup() {
 
     cameraInterruptState = 0;
 
-    // TODO convert to c++ thingy
     cameraSiPwm.setup();
     cameraSiPwm.setPulseWidthUs(16);
 }
 
 void NXP_Camera::proc() {
-    while (1) {  // FIXME: This should not be a blocking loop
+    while (1) { 
         while (cameraInterruptState) {
             cameraDelayStartUs = k_cycle_get_32();
 
@@ -76,7 +75,6 @@ void NXP_Camera::proc() {
             cameraInterruptState = 0;
         }
 
-        // TODO check it!
         k_yield();
     }
 }
@@ -100,6 +98,5 @@ void NXP_Camera::cameraDelayUsStart(uint32_t us) {
 }
 
 void NXP_Camera::cameraThreadWrapper(void* arg1, void* arg2, void* arg3) {
-    // Rzutowanie wskaźnika na obiekt i wywołanie jego metody
     static_cast<NXP_Camera*>(arg1)->proc();
 }

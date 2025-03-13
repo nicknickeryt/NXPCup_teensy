@@ -4,7 +4,7 @@
 
 NXP_UART::NXP_UART(const struct device* uart_dev) : uart_dev(uart_dev) {}
 
-#include <stdio.h>  // dla vsnprintf
+#include <stdio.h> 
 
 void NXP_UART::write(const char* format, ...) {
     char buffer[64];

@@ -40,7 +40,6 @@ NXP_PWM kittyCameraSiPwm(PWM_CHANNEL_CAMERA_SI);
 
 NXP_UART kittyUart(UART_BT);
 
-// TODO proper camera port please :3
 NXP_Camera kittyCamera(kittyCameraAdc, kittyCameraClkPin, kittyCameraSiPin,
                        kittyCameraSiPwm, kittyUart);
 

@@ -18,15 +18,15 @@
 	pwm_esc0: pwm_esc0 {
 		compatible = "pwm-servo";
 		pwms = <&flexpwm1_pwm3 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
-		min-pulse = <PWM_USEC(700)>;
-		max-pulse = <PWM_USEC(2300)>;
+		min-pulse = <PWM_MSEC(0)>;
+		max-pulse = <PWM_MSEC(20)>;
 	};
 
 	pwm_esc1: pwm_esc1 {
 		compatible = "pwm-servo";
 		pwms = <&flexpwm1_pwm3 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
-		min-pulse = <PWM_USEC(700)>;
-		max-pulse = <PWM_USEC(2300)>;
+		min-pulse = <PWM_MSEC(0)>;
+		max-pulse = <PWM_MSEC(20)>;
 	};
 
 	pwm_servo: pwm_servo {
@@ -44,7 +44,6 @@
 };
 
 &pinctrl {
-	// PWM_ESC0
 	pinmux_flexpwm_camera_si: pinmux_flexpwm_camera_si {
 		group0 {
 			pinmux = <&iomuxc_gpio_ad_b1_08_flexpwm4_pwma0>;
@@ -54,7 +53,7 @@
 		};
 	};
 
-	pinmux_flexpwm_esc0: pinmux_flexpwm_esc0 {
+	pinmux_flexpwm_esc: pinmux_flexpwm_esc {
 		group0 {
 			pinmux = <&iomuxc_gpio_b1_01_flexpwm1_pwmb3>, <&iomuxc_gpio_b1_00_flexpwm1_pwma3>;
 			drive-strength = "r0-7";
@@ -62,15 +61,6 @@
 			nxp,speed = "50-mhz";
 		};
 	};
-
-	// pinmux_flexpwm_esc1: pinmux_flexpwm_esc1 {
-	// 	group0 {
-	// 		pinmux = <&iomuxc_gpio_b1_00_flexpwm1_pwma3>;
-	// 		drive-strength = "r0-7";
-	// 		slew-rate = "fast";
-	// 		nxp,speed = "50-mhz";
-	// 	};
-	// };
 
 	pinmux_flexpwm_servo: pinmux_flexpwm_servo {
 		group0 {
@@ -103,7 +93,7 @@
 
 &flexpwm1_pwm3 {
 	status = "okay";
-	pinctrl-0 = <&pinmux_flexpwm_esc0>;
+	pinctrl-0 = <&pinmux_flexpwm_esc>;
 	pinctrl-names = "default";
 	nxp,prescaler = <64>;
 };
@@ -144,6 +134,6 @@
 &lpuart6 {
 	status = "okay";
 	compatible = "nxp,lpuart";
-	current-speed = < 115200 >;
+	current-speed = < 921600 >;
 	pinctrl-0 = <&pinmux_lpuart6>;
 };

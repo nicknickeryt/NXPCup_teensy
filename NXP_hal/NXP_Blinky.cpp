@@ -1,8 +1,5 @@
 #include "NXP_Blinky.hpp"
 
-// This looks really wrong in this place
-K_THREAD_STACK_DEFINE(blinky_stack, BLINKY_STACKSIZE);
-
 NXP_Blinky::NXP_Blinky(NXP_GPIO& gpio) : blinky_gpio(gpio) {
     gpio.configure(GPIO_OUTPUT_ACTIVE);
 }

@@ -15,4 +15,6 @@ void NXP_Servo::setDegrees(float degrees) {
     this->setPulseWidth(pulseWidth);
 }
 
+float NXP_Servo::getDegrees() const { return servoDegrees; }
+
 void NXP_Servo::setPulseWidth(int32_t pulseWidth) { servoPwm.setPulseWidthNs(pulseWidth); }

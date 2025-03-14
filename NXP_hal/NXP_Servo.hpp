@@ -18,6 +18,7 @@ class NXP_Servo {
     NXP_Servo(NXP_PWM& pwm);
     void setup();
     void setDegrees(float degrees);
+    float getDegrees() const;
 
    private:
     NXP_PWM& servoPwm;

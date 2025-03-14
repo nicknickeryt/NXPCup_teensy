@@ -20,14 +20,11 @@
 #define ALGORITHM_PRIORITY 7
 #define CAMERA_LOG_PRIORITY 3
 
-#define AMBER_LED_GPIO_PORT GPIO_PORT_2
-#define AMBER_LED_GPIO_PIN GPIO_PIN_3
-
-NXP_GPIO kittyAmberLed(AMBER_LED_GPIO_PORT, AMBER_LED_GPIO_PIN,
+NXP_GPIO kittyAmberLed(BLINKY_GPIO_PORT, BLINKY_GPIO_PIN,
                        GPIO_OUTPUT_ACTIVE);
 
-NXP_GPIO kittyEncoderPinA(GPIO_PORT_1, GPIO_PIN_17);
-NXP_GPIO kittyEncoderPinB(GPIO_PORT_1, GPIO_PIN_16);
+NXP_GPIO kittyEncoderPinA(ENCODER_GPIO_PORT, ENCODER_A_GPIO_PIN);
+NXP_GPIO kittyEncoderPinB(ENCODER_GPIO_PORT, ENCODER_B_GPIO_PIN);
 
 NXP_Blinky kittyBlinky(kittyAmberLed);
 NXP_USB kittyLogUSB;
@@ -47,7 +44,9 @@ NXP_PWM kittyPwmESC0(PWM_CHANNEL_ESC0);
 NXP_PWM kittyPwmESC1(PWM_CHANNEL_ESC1);
 NXP_PWM kittyPwmServo(PWM_CHANNEL_SERVO);
 
-NXP_Algorithm kittyAlgorithm(kittyCamera);
+NXP_Servo kittyServo(kittyPwmServo);
+
+NXP_Algorithm kittyAlgorithm(kittyCamera, kittyServo);
 
 NXP_Encoder kittyEncoder(kittyEncoderPinA, kittyEncoderPinB);
 
@@ -68,12 +67,10 @@ int main() {
     printk("Kitty v2 says hello <3\n");
     uint32_t freq = CLOCK_GetCpuClkFreq();
     printk("CPU Freq: %d\n", freq);
-    kittyUart.write("Kitty v2 says polling!\n");
-
-
+    kittyUart.write("Kitty v2 says UART!\n");
 }
 
-void periodicLog() {
+void demo() {
     int i = 0;
     bool direction = 1;
 
@@ -84,7 +81,8 @@ void periodicLog() {
         printk("Encoder RPM: %u\r\n", kittyEncoder.getRPM());
         printk("Direction: %d\r\n", kittyEncoder.getDirection());
 
-        printk("duty: %d\r\n", kittyPwmESC0.getDutyCycle());
+        printk("demoDuty: %d\r\n", kittyPwmESC0.getDutyCycle());
+        printk("Servo: %d\r\n", (int) kittyServo.getDegrees());
         kittyPwmESC0.setDutyCycle(i);
 
         if(direction) {
@@ -105,13 +103,16 @@ void periodicLog() {
 
 
 K_THREAD_DEFINE(blinkyThread_id, 1024, NXP_Blinky::blinkyThreadWrapper, &kittyBlinky,
-                NULL, NULL, 5, 0, 0);
+                NULL, NULL, 1, 0, 0);
 
-K_THREAD_DEFINE(periodicLog_id, 1024, periodicLog, NULL, NULL, NULL,
-                5, 0, 0);
+// K_THREAD_DEFINE(demo_id, 1024, demo, NULL, NULL, NULL,
+//                 5, 0, 0);
 
-K_THREAD_DEFINE(cameraThread_id, 1024, NXP_Camera::cameraThreadWrapper, &kittyCamera,
-                NULL, NULL, 5, 0, 0);
+K_THREAD_DEFINE(cameraThread_id, 2048, NXP_Camera::cameraThreadWrapper, &kittyCamera,
+                NULL, NULL, 100, 0, 0);
+
+// K_THREAD_DEFINE(algorithmThread_id, 2048, NXP_Algorithm::algorithmThreadWrapper, &kittyAlgorithm,
+//                 NULL, NULL, 3, 0, 0);
 
 // K_THREAD_DEFINE(algorithmDemo_id, ALGORITHM_STACKSIZE, algorithmDemo, NULL,
 // NULL,

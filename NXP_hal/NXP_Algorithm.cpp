@@ -1,10 +1,17 @@
 #include "NXP_Algorithm.hpp"
+#include "NXP_Camera.hpp"
 
-NXP_Algorithm::NXP_Algorithm(NXP_Camera& camera) : algorithmCamera(camera) {}
+#include <stdlib.h>
+
+NXP_Algorithm::NXP_Algorithm(NXP_Camera& camera, NXP_Servo& servo)
+    : algorithmCamera(camera), algorithmServo(servo) {}
 
 // TODO optimize this pls
 int32_t NXP_Algorithm::calculatePosition() {
     uint32_t* cameraBuffer = algorithmCamera.getCameraBufArr();
+    // uint32_t cameraBuffer[CAMERA_ADC_SAMPLES];
+
+    // k_msgq_get(&camera_msgq, &cameraBuffer, K_NO_WAIT);
 
     uint32_t smoothing[CAMERA_ADC_SAMPLES];
     uint32_t sobel[CAMERA_ADC_SAMPLES];
@@ -52,4 +59,17 @@ int32_t NXP_Algorithm::calculatePosition() {
     int steeringError = mean - ((CAMERA_ADC_SAMPLES / 2) - 1);
 
     return steeringError;
+}
+
+void NXP_Algorithm::proc() {
+    while (1) {
+        int steeringError = this->calculatePosition();
+        algorithmServo.setDegrees(steeringError);
+
+        k_msleep(1);
+    }
+}
+
+void NXP_Algorithm::algorithmThreadWrapper(void* arg1, void* arg2, void* arg3) {
+    static_cast<NXP_Algorithm*>(arg1)->proc();
 }

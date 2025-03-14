@@ -5,6 +5,10 @@
 
 #include "NXP_GPIO.hpp"
 
+#define ENCODER_GPIO_PORT GPIO_PORT_1
+#define ENCODER_A_GPIO_PIN GPIO_PIN_17
+#define ENCODER_B_GPIO_PIN GPIO_PIN_16
+
 class NXP_Encoder {
    public:
     NXP_Encoder(NXP_GPIO& encoderPinA, NXP_GPIO& encoderPinB);

@@ -28,13 +28,12 @@
 
 #define CAMERA_LOG_ENABLED 1
 
-
 class NXP_Camera {
    public:
     NXP_Camera(NXP_ADC& adc, NXP_GPIO& clkPin, NXP_GPIO& siPin, NXP_PWM& siPwm, NXP_UART& uart);
 
     void setup();
-    void proc();  // FIXME: We don't want a blocking while loop here
+    void proc(); 
 
     // TODO is using a pointer here a good idea?
     uint32_t* getCameraBufArr();

@@ -8,8 +8,6 @@
 
 bool NXP_Camera::cameraInterruptState = 0;
 
-K_MSGQ_DEFINE(camera_msgq, CAMERA_MSG_LEN, CAMERA_MSG_ARRAY_SIZE, 4);
-
 NXP_Camera::NXP_Camera(NXP_ADC& adc, NXP_GPIO& clkPin, NXP_GPIO& siPin,
                        NXP_PWM& siPwm, NXP_UART& uart)
     : cameraAdc(adc),
@@ -69,7 +67,7 @@ void NXP_Camera::proc() {
 
             // TODO:
             // servoSetDegrees(steeringError);
-            k_msgq_put(&camera_msgq, &cameraBufArr, K_NO_WAIT);
+            // k_msgq_put(&camera_msgq, &cameraBufArr, K_NO_WAIT);
 
             cameraInterruptState = 0;
         }

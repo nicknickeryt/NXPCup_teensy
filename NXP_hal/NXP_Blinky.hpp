@@ -8,6 +8,9 @@
 // TODO: learn what is this thing and why does it break at runtime
 #define BLINKY_STACKSIZE 256
 
+#define BLINKY_GPIO_PORT GPIO_PORT_2
+#define BLINKY_GPIO_PIN GPIO_PIN_3
+
 class NXP_Blinky {
    private:
     NXP_GPIO& blinky_gpio;

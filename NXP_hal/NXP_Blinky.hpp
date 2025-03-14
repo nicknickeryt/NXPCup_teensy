@@ -13,15 +13,12 @@ class NXP_Blinky {
     NXP_GPIO& blinky_gpio;
     struct k_thread blinky_thread;
 
-    void blink();
-
-    // TODO oh this is terrible, but we can't pass a member function to k_thread_create 
-    static void thread_entry(void* arg1, void*, void*);
-
    public:
+    static void blinkyThreadWrapper(void* arg1, void* arg2, void* arg3);
+
     NXP_Blinky(NXP_GPIO& gpio);
 
-    void start();
+    void proc();
 };
 
 #endif  // NXP_BLINKY_HPP

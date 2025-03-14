@@ -59,7 +59,6 @@ void NXP_Camera::proc() {
             cameraLogUart.write("\nCAML");
             for (unsigned int i = 0; i < CAMERA_ADC_SAMPLES; i++)
                 cameraLogUart.write(".%hhu", (uint8_t)(cameraBufArr[i] >> 2));
-            cameraLogUart.write("\r\n");
 #endif
 
             // TODO:

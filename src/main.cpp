@@ -52,8 +52,7 @@ NXP_Algorithm kittyAlgorithm(kittyCamera);
 NXP_Encoder kittyEncoder(kittyEncoderPinA, kittyEncoderPinB);
 
 int main() {
-    kittyBlinky.start();
-    kittyLogUSB.start();
+    kittyLogUSB.setup();
     kittyCameraAdc.setup();
 
     kittyCameraSiPwm.setup();
@@ -63,36 +62,55 @@ int main() {
     kittyPwmESC1.setup();
 
     kittyPwmServo.setup();
-    kittyEncoder.setup();
 
-    // Dummy --------------------------
-    kittyPwmESC0.setPulseWidthMs(1);
-    kittyPwmESC1.setPulseWidthMs(2);
-    kittyPwmServo.setPulseWidthUs(1500);
-    // Dummy --------------------------
+    kittyEncoder.setup();
 
     printk("Kitty v2 says hello <3\n");
     uint32_t freq = CLOCK_GetCpuClkFreq();
     printk("CPU Freq: %d\n", freq);
     kittyUart.write("Kitty v2 says polling!\n");
 
+
 }
 
 void periodicLog() {
+    int i = 0;
+    bool direction = 1;
+
     while (1) {
         printk("\nENCODER");
 
         printk("Encoder pulse: %" PRId64 "\r\n", kittyEncoder.getCount());
         printk("Encoder RPM: %u\r\n", kittyEncoder.getRPM());
         printk("Direction: %d\r\n", kittyEncoder.getDirection());
+
+        printk("duty: %d\r\n", kittyPwmESC0.getDutyCycle());
+        kittyPwmESC0.setDutyCycle(i);
+
+        if(direction) {
+            i++;
+        } else {
+            i--;
+        }
+
+        if(i == 100) {
+            direction = false;
+        } else if(i == 0) {
+            direction = true;
+        }
+
         k_msleep(100);
     }
 }
 
-K_THREAD_DEFINE(cameraProc_id, CAMERA_STACKSIZE, periodicLog, NULL, NULL, NULL,
-                CAMERA_PROC_PRIORITY, 0, 0);
 
-K_THREAD_DEFINE(camera_thread, 1024, NXP_Camera::cameraThreadWrapper, &kittyCamera,
+K_THREAD_DEFINE(blinkyThread_id, 1024, NXP_Blinky::blinkyThreadWrapper, &kittyBlinky,
+                NULL, NULL, 5, 0, 0);
+
+K_THREAD_DEFINE(periodicLog_id, 1024, periodicLog, NULL, NULL, NULL,
+                5, 0, 0);
+
+K_THREAD_DEFINE(cameraThread_id, 1024, NXP_Camera::cameraThreadWrapper, &kittyCamera,
                 NULL, NULL, 5, 0, 0);
 
 // K_THREAD_DEFINE(algorithmDemo_id, ALGORITHM_STACKSIZE, algorithmDemo, NULL,

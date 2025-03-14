@@ -6,7 +6,7 @@
 class NXP_USB {
    public:
     NXP_USB() = default;
-    void start();
+    void setup();
 };
 
 #endif  // NXP_USB_HPP

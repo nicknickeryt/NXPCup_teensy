@@ -38,8 +38,8 @@ graphics_layout.ci.layout.setRowStretchFactor(1, 1)
 
 graphics_layout.setBackground("#f1f1f1")
 
-plot0.setLabel('left', 'Value')
-plot0.setLabel('bottom', 'Sample')
+plot0.setLabel('left', 'Jasność')
+plot0.setLabel('bottom', 'Piksel')
 plot0.showGrid(x=True, y=True)
 
 x = np.arange(128)

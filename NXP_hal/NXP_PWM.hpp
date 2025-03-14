@@ -30,10 +30,15 @@ class NXP_PWM {
     void setPulseWidthUs(uint32_t pulseWidth);
     void setPulseWidthMs(uint32_t pulseWidth);
 
+    int getDutyCycle();
+    void setDutyCycle(int dutyCycle);
+
     const char* getDeviceName() const;
+
 
    private:
     const struct pwm_dt_spec* pwmSpec;
+    int pulseWidthNs;
 };
 
 #endif /* __NXP_PWM_HPP */

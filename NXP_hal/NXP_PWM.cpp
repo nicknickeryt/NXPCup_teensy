@@ -15,7 +15,9 @@ void NXP_PWM::setPulseWidthNs(uint32_t pulseWidth) {
     if (err < 0) {
         printk("Error: Failed to set PWM pulse width (%d) on %s\n", err,
                pwmSpec->dev->name);
+               return;
     }
+    this->pulseWidthNs = pulseWidth;
 }
 
 void NXP_PWM::setPulseWidthUs(uint32_t pulseWidthMs) {
@@ -26,6 +28,19 @@ void NXP_PWM::setPulseWidthUs(uint32_t pulseWidthMs) {
 void NXP_PWM::setPulseWidthMs(uint32_t pulseWidthMs) {
     uint32_t pulseWidthNs = pulseWidthMs * 1000000;
     setPulseWidthNs(pulseWidthNs);
+}
+
+void NXP_PWM::setDutyCycle(int dutyCycle) {
+    uint32_t periodNs = pwmSpec->period;
+    uint32_t pulseWidthNs = (dutyCycle * periodNs) / 100;
+    setPulseWidthNs(pulseWidthNs);
+}
+
+int NXP_PWM::getDutyCycle() {
+    int periodNs = pwmSpec->period;
+    int dutyCycle = (pulseWidthNs * 100) / periodNs;
+
+    return dutyCycle;
 }
 
 const char* NXP_PWM::getDeviceName() const { return pwmSpec->dev->name; }
